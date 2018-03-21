@@ -8,6 +8,9 @@
     "build": "tsc -p tsconfig.json && cp dist/secure-variable.d.ts index.d.ts"
   },
   "keywords": [
+    "encryption",
+    "variable",
+    "security"
   ],
   "author": "Hans Doller <kryo2k@gmail.com>",
   "license": "GPLv3",
