@@ -140,7 +140,7 @@ export class SecureVariable <T=any> {
   }
 
   static encode <T=any> (value : T, replacer : ISecureVariableReplacer<T> = v => v) : Buffer {
-    const encoded = JSON.stringify(value, (key : any, value : T) => replacer(value), 0);
+    const encoded = JSON.stringify(replacer(value));
 
     if(typeof encoded === 'undefined')
       return Buffer.allocUnsafe(0);
@@ -150,21 +150,19 @@ export class SecureVariable <T=any> {
 
   static encrypt (buf : Buffer, password : string, algorithm : string = defaultAlgorithm) : Buffer {
     const cipher = crypto.createCipher(algorithm, password);
-    cipher.update(buf);
-    return cipher.final();
+    return Buffer.concat([cipher.update(buf), cipher.final()]);
   }
 
   static decode <T=any> (encoded : Buffer, reviver : ISecureVariableReviver<T> = v => v as T) : T|undefined {
     if(encoded.length === 0)
       return undefined;
 
-    return JSON.parse(encoded.toString('utf8'), (key : any, value : T) => reviver(value)) as T;
+    return reviver(JSON.parse(encoded.toString('utf8')));
   }
 
   static decrypt (buf : Buffer, password : string, algorithm : string = defaultAlgorithm) : Buffer {
     const decipher = crypto.createDecipher(algorithm, password);
-    decipher.update(buf);
-    return decipher.final();
+    return Buffer.concat([decipher.update(buf), decipher.final()]);
   }
 
   static import <T=any> (rawData : Buffer, algorithm ?: string) : SecureVariable<T> {

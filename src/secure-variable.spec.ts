@@ -111,4 +111,35 @@ describe('SecureVariable<Object>', () => {
     expect(instance.get(password)).to.eq(null);
   });
 
+  interface ISimpleObject {
+    value1: any;
+    value2 : any;
+    options: {
+      value1 : any;
+      value2 : any;
+    }
+  };
+
+  it('should serialize nested objects', () => {
+
+    const
+    password = 'test',
+    instance = new SecureVariable<ISimpleObject>({
+      value1: 'test1',
+      value2: 'test2',
+      options: {
+        value1 : 'test3',
+        value2 : 'test4'
+      }
+    }, password);
+
+    expect(instance.get(password)).to.deep.eq({
+      value1: 'test1',
+      value2: 'test2',
+      options: {
+        value1: 'test3',
+        value2: 'test4'
+      }
+    });
+  });
 });
