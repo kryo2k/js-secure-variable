@@ -25,8 +25,7 @@ export const headerSize = 1;
 export class SecureVariable <T=any> {
 
   algorithm ?: string;
-
-  private data  : Buffer = Buffer.allocUnsafe(0);
+  data       : Buffer = Buffer.allocUnsafe(0);
 
   constructor(value : T|Buffer, password ?: string, replacer ?: ISecureVariableReplacer<T>, algorithm ?: string) {
     this.algorithm = algorithm;
@@ -44,10 +43,6 @@ export class SecureVariable <T=any> {
   get isEncrypted () : boolean {
     if(this.isEmpty) return false;
     return SecureVariable.getHeader(this.data).encrypted;
-  }
-
-  get rawData () : Buffer {
-    return this.data;
   }
 
   set (value : T, password ?: string, replacer ?: ISecureVariableReplacer<T>) : SecureVariable<T> {
@@ -165,7 +160,7 @@ export class SecureVariable <T=any> {
     return Buffer.concat([decipher.update(buf), decipher.final()]);
   }
 
-  static import <T=any> (rawData : Buffer, algorithm ?: string) : SecureVariable<T> {
-    return new SecureVariable<T>(rawData, undefined, undefined, algorithm);
+  static import <T=any> (data : Buffer, algorithm ?: string) : SecureVariable<T> {
+    return new SecureVariable<T>(data, undefined, undefined, algorithm);
   }
 };

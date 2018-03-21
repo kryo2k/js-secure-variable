@@ -47,14 +47,14 @@ describe('SecureVariable<string>', () => {
   it('should be able to do export import (plaintext)', () => {
     let
     instance1 = new SecureVariable<string>(TEST_1),
-    instance2 = SecureVariable.import<string>(instance1.rawData);
+    instance2 = SecureVariable.import<string>(instance1.data, instance1.algorithm);
     expect(instance2.get()).to.eq(instance1.get());
   });
 
   it('should be able to do export import (encrypted)', () => {
     let
     instance1 = new SecureVariable<string>(TEST_1, TEST_2),
-    instance2 = SecureVariable.import<string>(instance1.rawData);
+    instance2 = SecureVariable.import<string>(instance1.data, instance1.algorithm);
     expect(instance2.get(TEST_2)).to.eq(instance1.get(TEST_2));
   });
 });
