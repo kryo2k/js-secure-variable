@@ -28,11 +28,11 @@ describe('SecureVariable<string>', () => {
         chai_1.expect(detail.decoded).to.eq(TEST_1);
     });
     it('should be able to do export import (plaintext)', () => {
-        let instance1 = new secure_variable_1.SecureVariable(TEST_1), instance2 = secure_variable_1.SecureVariable.import(instance1.rawData);
+        let instance1 = new secure_variable_1.SecureVariable(TEST_1), instance2 = secure_variable_1.SecureVariable.import(instance1.data, instance1.algorithm);
         chai_1.expect(instance2.get()).to.eq(instance1.get());
     });
     it('should be able to do export import (encrypted)', () => {
-        let instance1 = new secure_variable_1.SecureVariable(TEST_1, TEST_2), instance2 = secure_variable_1.SecureVariable.import(instance1.rawData);
+        let instance1 = new secure_variable_1.SecureVariable(TEST_1, TEST_2), instance2 = secure_variable_1.SecureVariable.import(instance1.data, instance1.algorithm);
         chai_1.expect(instance2.get(TEST_2)).to.eq(instance1.get(TEST_2));
     });
 });
@@ -62,6 +62,25 @@ describe('SecureVariable<Object>', () => {
     it('should allow me to serialize NULL', () => {
         const password = 'test', instance = new secure_variable_1.SecureVariable(null, password);
         chai_1.expect(instance.get(password)).to.eq(null);
+    });
+    ;
+    it('should serialize nested objects', () => {
+        const password = 'test', instance = new secure_variable_1.SecureVariable({
+            value1: 'test1',
+            value2: 'test2',
+            options: {
+                value1: 'test3',
+                value2: 'test4'
+            }
+        }, password);
+        chai_1.expect(instance.get(password)).to.deep.eq({
+            value1: 'test1',
+            value2: 'test2',
+            options: {
+                value1: 'test3',
+                value2: 'test4'
+            }
+        });
     });
 });
 //# sourceMappingURL=secure-variable.spec.js.map
